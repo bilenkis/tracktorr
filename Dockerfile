@@ -3,12 +3,11 @@ MAINTAINER Yury Bilenkis <adm@bilenkis.ru>
 
 CMD /usr/bin/supervisord --nodaemon --configuration /etc/supervisor/supervisord.conf
 
-RUN NGINX_VERSION="1.9.10" \
+RUN NGINX_VERSION="1.9.15" \
     && curl -L -o /opt/nginx-$NGINX_VERSION.deb "http://nginx.org/packages/mainline/ubuntu/pool/nginx/n/nginx/nginx_$NGINX_VERSION-1~xenial_amd64.deb" \
     && dpkg -i /opt/nginx-$NGINX_VERSION.deb \
     && rm -rf /opt/nginx-$NGINX_VERSION.deb \
-    && rm -rf /etc/nginx/conf.d/default \
-    && mkdir /etc/nginx/sites-enabled
+    && rm -rf /etc/nginx/conf.d/default
 
 RUN set -x \
     && export DEBIAN_FRONTEND=noninteractive \
@@ -23,11 +22,11 @@ RUN set -x \
         python-setuptools \
         python3 \
         python3-pip \
-        python3-psycopg2 \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY etc /etc
 RUN cd /var/www/app \
+    && nginx -t \
     && pip3 install --disable-pip-version-check --no-cache-dir \
         -r /etc/requirements.txt \
     && pip3 freeze --disable-pip-version-check > /etc/pip-freeze.txt
