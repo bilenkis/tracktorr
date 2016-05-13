@@ -16,6 +16,7 @@ RUN set -x \
         python-setuptools \
         python3 \
         python3-pip \
+        python3-psycopg2 \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN NGINX_VERSION="1.9.15" \
